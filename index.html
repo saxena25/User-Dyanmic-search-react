@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User List with Dynamic Search</title>
+    <style>
+        .container{
+            text-align: center;
+        }
+        .userContainer{
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            width: 30rem;
+            margin: auto;
+            text-align: center;
+            gap: 10px;
+        }
+        .userCard{
+            border: 1px dotted gray;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script src="https://www.unpkg.com/react@18.2.0/umd/react.development.js"></script>
+    <script src="https://www.unpkg.com/react-dom@18.2.0/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+        const userData = [
+            {id:1, name: 'albert', position: 'Marketing Head', company: 'Tata Motors'},
+            {id:2, name: 'abhishek', position: 'Software Developer', company: 'BorderFree'},
+            {id:3, name: 'hrithik', position: 'Esports Athlete', company: 'Global Esports'},
+            {id:4, name: "dolly", position: 'TGT Hindi', company: 'RDPS'},
+            {id:5, name: 'hemant', position: 'Head Constable',  company: 'NCRB'},
+            {id:6, name: 'sachin', position: 'Manager',  company: 'Car Dealer'}
+        ]//here I have created a Data of users..
+
+        function UserProfile({user}){
+            const {id,name, position, company} = user;
+            return(
+                <div className='userCard'>
+                    <h2>{name}</h2>
+                    <p>{position}</p>
+                    <p>{company}</p>
+                </div>
+            )
+        }// created a UserProfile Card which is child of App component...
+        
+        function App(){
+            const [search, setSearch] = React.useState('');
+            const [filterUser, setFilterUser] = React.useState(userData);//here i have put userData in filterUser so then i run a loop over it.
+
+            const handleSearch = (event) =>{
+                const userInput = event.target.value;
+                setSearch(userInput);// here I have put a userInput in SetSearch...
+                const filteredUsers =  userData.filter((user)=>user.name.includes(userInput));// here  I have putted a  filter method to filter the users by name.
+                //if userInput === user.name it will show the user or users..
+                setFilterUser(filteredUsers)// now here i have putted a filtered users into a setFilterUser 
+            }
+            
+            return(
+                <>
+                    <div className='container'>
+                        <h1>Search User By Name</h1>
+                        <label>
+                            <input type="text" value={search}  placeholder='Search by Name...' onChange={handleSearch} />    
+                        </label>
+                    </div>
+                    <div className ="userContainer">
+                        {filterUser.map((user)=>(
+                            <UserProfile key={user.id} user={user} />
+                        ))}
+                    </div>
+                </>
+            )
+        }
+        const root = document.getElementById('root');
+        ReactDOM.createRoot(root).render(<App />);
+    </script>
+</body>
+</html>
